@@ -1,0 +1,2 @@
+FIX : bwa.mk -> compilation pb with libfastx.a ? 
+ADD: copy licence files to a dedicated dir. 
