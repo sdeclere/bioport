@@ -89,21 +89,21 @@ BUILD_TARGETS = $(addprefix build-,$(BUILD_SCRIPTS))
 build: fetch extract configure pre-build $(BUILD_TARGETS) post-build install
 	$(DONADA)
 	
-	
 FETCH_TARGETS =  $(addprefix $(DOWNLOADDIR)/,$(ARCHIVE))
 
 # Fetch software 
 fetch:  pre-fetch $(FETCH_TARGETS) post-fetch
 		$(DONADA)
 
-# Extract archives in pool 
+# Extract archives in pool
+ZIP_TARGETS = $(addprefix zip-extract-, $(filter %.zip,$(ARCHIVE)))
 TGZ_TARGETS = $(addprefix tar-gz-extract-, $(filter %.tgz,$(ARCHIVE)))
 TARGZ_TARGETS = $(addprefix tar-gz-extract-, $(filter %.tar.gz,$(ARCHIVE)))
 TAR_TARGETS = $(addprefix tar-extract-, $(filter %.tar,$(ARCHIVE)))
 TARBZ_TARGETS = $(addprefix tar-bz-extract-, $(filter %.tar.bz,$(ARCHIVE)))
 TARBZ_TARGETS = $(addprefix tar-bz-extract-, $(filter %.tar.bz2,$(ARCHIVE)))
 
-extract: pre-tar $(TGZ_TARGETS) $(TARGZ_TARGETS) $(TAR_TARGETS) $(TARBZ_TARGETS) post-tar
+extract: pre-extract $(ZIP_TARGETS) $(TGZ_TARGETS) $(TARGZ_TARGETS) $(TAR_TARGETS) $(TARBZ_TARGETS) post-extract
 		$(DONADA)
 		
 # Runs GNU configure if needed
@@ -150,6 +150,11 @@ tar-bz-extract-%:
 	@$(MKDIR) $(WORKSRC)
 	@bzip2 -dc $(DOWNLOADDIR)/$* | $(TAR) $(TAR_ARGS) -xf - -C $(WORKSRC)
 
+# rule to extract files with tar and bzip
+zip-extract-%:
+	@echo " ==> Extracting $(DOWNLOADDIR)/$*"
+	@unzip  -d $(WORKSRC) $(DOWNLOADDIR)/$*
+	
 # download software only support http 
 $(DOWNLOADDIR)/%:
 	@if test -f $(DOWNLOADDIR)/$* ; then true ; else \

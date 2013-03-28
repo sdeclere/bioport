@@ -12,7 +12,6 @@ include ports.mk
 TAR_ARGS += --strip 1
 
 post-build:
-	@$(INSTALL) -C $(WORKSRC)/*.pl $(PORTSDIR)/bin/
 	@$(INSTALL) -C $(WORKSRC)/bwa  $(PORTSDIR)/bin/
 
 

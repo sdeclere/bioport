@@ -7,7 +7,7 @@
 # .SILENT:
 
 MAKE= make
-PORTS= libgtextutils bwa fastx samtools tagdust velvet quast minia # Gasst 
+PORTS= libgtextutils bwa fastx samtools tagdust velvet quast minia sickle fastqc glimmer # Gasst 
 
 DONADA = @echo "[$@] complete.  Finished rules: $+"
 
