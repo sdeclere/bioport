@@ -1,40 +1,52 @@
-# Redistribution and/or use, with or without modification, is
-# permitted.  This software is without warranty of any kind.  The
-# author(s) shall not be liable in the event that use of the
-# software causes damage.
-
-
-# Top level makefile for pavane ports 
-#  <stef> 
-
-
+#
+# Top level makefile for bioports 
+# run make for building the whole ports 
+#
 
 # quiet make 
 # .SILENT:
 
 MAKE= make
-PORTS= libgtextutils bwa fastx samtools tagdust velvet quast minia 
+PORTS= libgtextutils bwa fastx samtools tagdust velvet quast minia # Gasst 
 
 DONADA = @echo "[$@] complete.  Finished rules: $+"
 
 # Main target 
-all: build
+all: init build
 
+# init port fs 
+init: 
+	@$(MAKE) -f ports.mk init-port 
 
 # Main target actually compile all
 PORTS_TARGETS = $(addprefix build-,$(PORTS))
-
 build: $(PORTS_TARGETS) 
 	$(DONADA)
 
 build-%: 
-	@echo " ==> Making ports $*"
-	@$(MAKE) -f $*.mk
-	 
-clean: 
-	@for m in *.mk; do \
-	echo "==> cleaning $$m"; \
-	($(MAKE) -f $$m clean); done 
+	@echo " ==> Build port:  $*"
+	@$(MAKE) -f $*.mk 
+#
+
+# Pureg targets 
+PURGE_TARGETS = $(addprefix purge-,$(PORTS))
+purge: $(PURGE_TARGETS)
+	$(DONADA)
+	
+purge-%: 
+	@echo " ==> Purging port $*"
+	@$(MAKE) -f $*.mk purge 
+#
+
+# Clean targets 
+CLEAN_TARGETS = $(addprefix clean-,$(PORTS))
+clean: $(CLEAN_TARGETS)
+	$(DONADA)
+	
+clean-%: 
+	@echo " ==> Cleaning port $*"
+	@$(MAKE) -f $*.mk clean
+#
 
 ## DEBUG
 print-%:
