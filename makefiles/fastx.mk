@@ -13,3 +13,6 @@ include ports.mk
 
 TAR_ARGS += --strip 1
 
+pre-build: 
+	@$(MAKE) -C $(WORKSRC)/src/libfastx
+
