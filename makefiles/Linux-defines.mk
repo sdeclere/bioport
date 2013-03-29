@@ -2,5 +2,6 @@
 MAKE = make
 INSTALL = install
 RM = rm -f
-TAR = tar
 AR = ar
+MKDIR	= mkdir -p
+TAR = tar
