@@ -14,5 +14,3 @@ LDFLAGS += -lz
 
 post-build: 
 	@$(INSTALL) -C $(WORKSRC)/sickle-master/sickle $(PORTSDIR)/bin/
-	
-

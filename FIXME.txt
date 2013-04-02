@@ -1,1 +1,2 @@
 ADD: copy licence files to a dedicated dir. 
+BUG: sickle comilation failed because -lz have be the last arg of gcc ?

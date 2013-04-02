@@ -11,6 +11,9 @@ include ports.mk
 
 TAR_ARGS += --strip 1
 
+
+BUILD_ENV += "DFLAGS = -msse2 -DHAVE_PTHREAD"
+
 post-build:
 	@$(INSTALL) -C $(WORKSRC)/bwa  $(PORTSDIR)/bin/
 
