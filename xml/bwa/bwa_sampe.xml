@@ -1,0 +1,129 @@
+<tool name="bwa_sampe" version="0.6.2-r126">
+     
+      <description>
+               Burrows-Wheeler Aligner (BWA) is an efficient program that 
+               aligns relatively short nucleotide sequences against a long 
+               reference sequence such as the human genome. It implements 
+               two algorithms, bwa-short and BWA-SW. The former works for 
+               query sequences shorter than 200bp and the latter for longer 
+               sequences up to around 100kbp. Both algorithms do gapped 
+               alignment. They are usually more accurate and faster on 
+               queries with low error rates.
+      
+               Li H. and Durbin R. (2009) Fast and accurate short read 
+               alignment with Burrows-Wheeler Transform. Bioinformatics, 
+               25:1754-60. [PMID: 19451168]
+      
+               For both algorithms, the database file in the FASTA format 
+               must be first indexed with the "index" command, which 
+               typically takes a few hours. The first algorithm is 
+               implemented via the "aln" command, which finds the suffix 
+               array (SA) coordinates of good hits of each individual read, 
+               and the "samse/sampe" command, which converts SA coordinates 
+               to chromosomal coordinate and pairs reads (for "sampe"). The 
+               second algorithm is invoked by the "bwasw" command. It works 
+               for single-end reads only.
+      
+               -- 
+               Generate alignments in the SAM format given paired-end reads. 
+      </description>
+
+       <inputs>	
+                <param type="string" label = "Index prefix" name="index.prefix" optional="false">
+			<help> Directory name that contains the BWA index</help>
+		</param>
+
+	        <param type="file" label = "SAI input file 1" name="input1.sai" optional="false">
+			<help>BWA sai file</help>
+		</param>
+
+	        <param type="file" label = "SAI input file 2" name="input2.sai" optional="false">
+			<help>BWA sai file</help>
+		</param>
+
+	        <param type="file" label = "FQ input file 1" name="input1.fq" optional="false">
+			<help>Input fastq file</help>
+		</param>
+
+	        <param type="file" label = "FQ input file 2" name="input2.fq" optional="false">
+			<help>Input fastq file</help>
+		</param>
+
+		<param name="param-a" type="integer" label="Maximum insert size" optional="true">
+			<cards min="1" max="1"/>
+			<help>maximum insert size [500]</help>
+		</param>
+
+		<param name="param-o" type="integer" label="Maximum occurrences" optional="true">
+			<cards min="1" max="1"/>
+			<help>maximum occurrences for one end [100000]</help>
+		</param>
+
+		<param name="param-n" type="integer" label="maximum hits (paired)" optional="true">
+			<cards min="1" max="1"/>
+			<help>maximum hits to output for paired reads [3]</help>
+		</param>
+
+		<param name="param-N" type="integer" label="Maximum hits (discordant)" optional="true">
+			<cards min="1" max="1"/>
+			<help>maximum hits to output for discordant pairs [10]</help>
+		</param>
+
+		<param name="param-c" type="float" label="prior of chimeric" optional="true">
+			<cards min="1" max="1"/>
+			<help>prior of chimeric rate (lower bound) [1.0e-05]</help>
+		</param>
+
+		<param name="param-r" type="string" label="Group header line" optional="true">
+			<cards min="1" max="1"/>
+			<help>read group header line such as `@RG\tID:foo\tSM:bar</help>
+		</param>
+
+		<param name="param-P" type="boolean" label="Preload index" optional="true">
+			<cards min="1" max="1"/>
+			<help>preload index into memory (for base-space reads only)</help>
+		</param>
+		<param name="param-s" type="boolean" label="Disable Smith-Waterman" optional="true">
+			<cards min="1" max="1"/>
+			<help>disable Smith-Waterman for the unmapped mate</help>
+		</param>
+		<param name="param-A" type="boolean" label="Disable insert size" optional="true">
+			<cards min="1" max="1"/>
+			<help>disable insert size estimate (force -s)</help>
+		</param>
+           </inputs>	
+
+           <command>
+
+		bwa sampe 
+		 {?param-N 
+		  -N {=param-N}}
+		 {?param-P 
+		  -P {=param-P}}
+		 {?param-a 
+		  -a {=param-a}}
+		 {?param-c 
+		  -c {=param-c}}
+		 {?param-f 
+		  -f {=param-f}}
+		 {?param-n 
+		  -n {=param-n}}
+		 {?param-o 
+		  -o {=param-o}}
+		 {?param-A 
+		  -A {=param-A}}
+		 {?param-s 
+		  -s {=param-s}}
+		 {?param-r 
+		  -r {=param-r}}
+
+                 {=index.prefix} {=input1.sai} {=input2.sai} {=input1.fq} {=input2.fq}
+	</command>
+
+	<outputs>
+	        <param type="file" label = "Sam output file" name="param-f">
+			<help> Resulting SAM Output file.</help>
+		</param>	
+	</outputs>
+</tool>
+

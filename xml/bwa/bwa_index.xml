@@ -1,0 +1,88 @@
+<tool name="bwa_index" version="0.6.2-r126">
+	<description>
+		Burrows-Wheeler Aligner (BWA) is an efficient program that 
+		aligns relatively short nucleotide sequences against a long 
+		reference sequence such as the human genome. It implements 
+		two algorithms, bwa-short and BWA-SW. The former works for 
+		query sequences shorter than 200bp and the latter for longer 
+		sequences up to around 100kbp. Both algorithms do gapped 
+		alignment. They are usually more accurate and faster on 
+		queries with low error rates.
+		
+		Li H. and Durbin R. (2009) Fast and accurate short read 
+		alignment with Burrows-Wheeler Transform. Bioinformatics, 
+		25:1754-60. [PMID: 19451168]
+		
+		For both algorithms, the database file in the FASTA format 
+		must be first indexed with the index command, which 
+		typically takes a few hours. The first algorithm is 
+		implemented via the aln command, which finds the suffix 
+		array (SA) coordinates of good hits of each individual read, 
+		and the samse/sampe command, which converts SA coordinates 
+		to chromosomal coordinate and pairs reads (for sampe). The 
+		second algorithm is invoked by the bwasw command. It works 
+		for single-end reads only.
+		
+		** BWA Index database sequences in the FASTA format. **
+		
+		is IS linear-time algorithm for constructing suffix array. 
+		It requires 5.37N memory where N is the size of the 
+		database. IS is moderately fast, but does not work with 
+		database larger than 2GB. IS is the default algorithm due to 
+		its simplicity. The current codes for IS algorithm are 
+		reimplemented by Yuta Mori. bwtsw Algorithm implemented in 
+		BWT-SW. This method works with the whole human genome, but 
+		it does not work with database smaller than 10MB and it is 
+		usually slower than IS.
+		
+		Warning: "-a bwtsw" does not work for short genomes, while 
+		"-a is" and "-a div" do not work not for long genomes. 
+		Please choose "-a" according to the length of the genome. 
+	</description>
+	
+	<inputs>
+		<param name="input.fasta" type="file" label="Fasta reference(s)" >
+			<help>Fasta file containing refrences sequences.</help>
+		</param>
+		
+		<param name="param-a" type="string" label="Index creation method" optional="true">
+			<cards min="1" max="1"/>
+			<help>Algorithm used to build the index [is|bwtsw|auto]</help>
+		</param>
+
+<!--
+		<param name="param-a" type="select" label="Index creation 
+		algorithm" optional="true">
+			<option value="is"> is </option> 
+			<option value="auto" selected="True"> auto </option> 
+			<option value="bwtsw"> bwtsw </option>
+		</param>
+-->
+
+		<param name="param-p" type="string" label="Index id">
+			<cards min="1" max="1"/>
+			<help>Name of the generated index</help>
+		</param>
+
+	</inputs>
+
+	<command>
+		bwa_index_wrapper.sh
+		 {?param-a 
+		  -a {=param-a}}
+		 {?param-p 
+		  -p {=param-p}}
+		 {?output.dir
+			--pav-dir={=output.dir}}
+		 {?input.fasta
+		    --pav-ref={=input.fasta}}
+	</command>
+
+	<outputs>
+		<param name="output.dir" type="directory" label="Index directory" >
+			<cards min="1" max="1"/>
+			<help>A directory containing the BWA index.</help>
+		</param>
+	</outputs>
+	
+</tool>

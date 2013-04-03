@@ -1,0 +1,83 @@
+<tool name="bwa_samse" version="0.6.2-r126">
+
+	<description>
+		Burrows-Wheeler Aligner (BWA) is an efficient program that 
+		aligns relatively short nucleotide sequences against a long 
+		reference sequence such as the human genome. It implements 
+		two algorithms, bwa-short and BWA-SW. The former works for 
+		query sequences shorter than 200bp and the latter for longer 
+		sequences up to around 100kbp. Both algorithms do gapped 
+		alignment. They are usually more accurate and faster on 
+		queries with low error rates.
+		
+		Li H. and Durbin R. (2009) Fast and accurate short read 
+		alignment with Burrows-Wheeler Transform. Bioinformatics, 
+		25:1754-60. [PMID: 19451168]
+		
+		For both algorithms, the database file in the FASTA format 
+		must be first indexed with the "index" command, which 
+		typically takes a few hours. The first algorithm is 
+		implemented via the "aln" command, which finds the suffix 
+		array (SA) coordinates of good hits of each individual read, 
+		and the "samse/sampe" command, which converts SA coordinates 
+		to chromosomal coordinate and pairs reads (for "sampe"). The 
+		second algorithm is invoked by the "bwasw" command. It works 
+		for single-end reads only.
+		
+		-- 
+		Generate alignments in the SAM format given single-end reads. 
+                Repetitive hits will be randomly chosen.
+	</description>
+
+	<inputs>
+		<param type="string" label = "Index prefix" name="index.prefix" optional="false">
+			<help> Directory name that contains the BWA index</help>
+		</param>
+
+		<param type="string" label = "Index name" name="index.name" optional="false">
+			<help> Name of the index to use for the mapping</help>
+		</param>
+
+		<param type="file" label = "SAI input file" name="input.sai" optional="false">
+			<help>BWA sai file</help>
+		</param>
+
+		<param type="file" label = "FQ input file" name="input.fq" optional="false">
+			<help>Input fastq file</help>
+		</param>
+
+		<param name="param-n" type="integer" label="XA repporting" optional="true">
+			<cards min="1" max="1"/>
+			<help>Maximum number of alignments to output in the XA tag for reads paired properly. If a read has more than INT hits</help>
+		</param>
+
+		<param name="param-r" type="string" label="Specify RG tag" optional="true">
+			<cards min="1" max="1"/>
+			<help>Specify the read group in a format like "@RG\tID:foo\tSM:bar". [null]</help>
+		</param>
+        </inputs>	
+
+        <command>
+
+               bwa samse
+		 {?param-n 
+		  -n {=param-n}}
+
+		 {?param-r 
+		  -r {=param-r}}
+
+		 {?param-f
+		  -f {=param-f}}
+
+                 {=index.prefix}/{=index.name} {=input.sai} {=input.fq}
+
+	</command>
+
+	<outputs>
+		<param type="file" label = "Sam output file" name="param-f">
+			<help> Resulting SAM Output file.</help>
+		</param>
+	</outputs>
+
+</tool>
+

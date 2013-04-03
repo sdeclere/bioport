@@ -1,0 +1,176 @@
+<tool name="bwa_aln" version="0.6.2-r126">
+	<description>
+		Burrows-Wheeler Aligner (BWA) is an efficient program that 
+		aligns relatively short nucleotide sequences against a long 
+		reference sequence such as the human genome. It implements 
+		two algorithms, bwa-short and BWA-SW. The former works for 
+		query sequences shorter than 200bp and the latter for longer 
+		sequences up to around 100kbp. Both algorithms do gapped 
+		alignment. They are usually more accurate and faster on 
+		queries with low error rates.
+		
+		Li H. and Durbin R. (2009) Fast and accurate short read 
+		alignment with Burrows-Wheeler Transform. Bioinformatics, 
+		25:1754-60. [PMID: 19451168]
+		
+		For both algorithms, the database file in the FASTA format 
+		must be first indexed with the "index" command, which 
+		typically takes a few hours. The first algorithm is 
+		implemented via the "aln" command, which finds the suffix 
+		array (SA) coordinates of good hits of each individual read, 
+		and the "samse/sampe" command, which converts SA coordinates 
+		to chromosomal coordinate and pairs reads (for "sampe"). The 
+		second algorithm is invoked by the "bwasw" command. It works 
+		for single-end reads only.
+		
+		-- 
+		BWA ALN Find the SA coordinates of the input reads. 
+		Maximum maxSeedDiff differences are allowed in the first 
+		seedLen subsequence and maximum maxDiff differences are 
+		allowed in the whole sequence.
+	</description>
+	<inputs>
+		<param type="string" label = "Index prefix" name="index.prefix" optional="false">
+			<help> Directory name taht contains the BWA index</help>
+		</param>
+
+		<param type="string" label = "Index name" name="index.name" optional="false">
+			<help> Name of the index to use for the mapping</help>
+		</param>
+
+		<param type="file" label = "Fastq input file" name="input.fastq" optional="false">
+			<help> File containing the reads (fastq formated)</help>
+		</param>
+		
+		<param name="param-n" type="float" label="Max #diff (int)" optional="true">
+			<cards min="1" max="1"/>
+			<help>max #diff (int) or missing prob under 0.02 err rate (float) [0.04]</help>
+		</param>
+		<param name="param-o" type="integer" label="Max gaps" optional="true">
+			<cards min="1" max="1"/>
+			<help>maximum number (or fraction) of gap opens [1]</help>
+		</param>
+		<param name="param-e" type="integer" label="Max gap ext" optional="true">
+			<cards min="1" max="1"/>
+			<help>maximum number of gap extensions</help>
+		</param>
+		<param name="param-i" type="integer" label="Indel limit [5]" optional="true">
+			<cards min="1" max="1"/>
+			<help>do not put an indel within INT bp towards the ends [5]</help>
+		</param>
+		<param name="param-d" type="integer" label="Maximum occ long del" optional="true">
+			<cards min="1" max="1"/>
+			<help>maximum occurrences for extending a long deletion [10]</help>
+		</param>
+		<param name="param-l" type="integer" label="Seed length [32]" optional="true">
+			<cards min="1" max="1"/>
+			<help>seed length [32]</help>
+		</param>
+		<param name="param-k" type="integer" label="Maximum diff seed" optional="true">
+			<cards min="1" max="1"/>
+			<help>maximum differences in the seed [2]</help>
+		</param>
+		<param name="param-m" type="integer" label="Maximum q" optional="true">
+			<cards min="1" max="1"/>
+			<help>maximum entries in the queue [2000000]</help>
+		</param>
+		<param name="param-t" type="integer" label="Number of threads" optional="true">
+			<cards min="1" max="1"/>
+			<help>number of threads [1]</help>
+		</param>
+		<param name="param-M" type="integer" label="Mismatch penalty [3]" optional="true">
+			<cards min="1" max="1"/>
+			<help>mismatch penalty [3]</help>
+		</param>
+		<param name="param-O" type="integer" label="Gap open penalty" optional="true">
+			<cards min="1" max="1"/>
+			<help>gap open penalty [11]</help>
+		</param>
+		<param name="param-E" type="integer" label="Gap extension penalty" optional="true">
+			<cards min="1" max="1"/>
+			<help>gap extension penalty [4]</help>
+		</param>
+		<param name="param-R" type="integer" label="Stop cond" optional="true">
+			<cards min="1" max="1"/>
+			<help>stop searching when there are >INT equally best hits [30]</help>
+		</param>
+		<param name="param-q" type="integer" label="Quality threshold" optional="true">
+			<cards min="1" max="1"/>
+			<help>quality threshold for read trimming down to 35bp [0]</help>
+		</param>
+		
+		<param name="param-B" type="integer" label="Length of barcode" optional="true">
+			<cards min="1" max="1"/>
+			<help>length of barcode</help>
+		</param>
+		<param name="param-L" type="boolean" label="Log-scaled gap penalty" optional="true">
+			<cards min="1" max="1"/>
+			<help>log-scaled gap penalty for long deletions</help>
+		</param>
+		<param name="param-N" type="boolean" label="Non-iterative mode" optional="true">
+			<cards min="1" max="1"/>
+			<help>non-iterative mode: search for all n-difference hits (slooow)</help>
+		</param>
+		<param name="param-I" type="boolean" label="Input format" optional="true">
+			<cards min="1" max="1"/>
+			<help>the input is in the Illumina 1.3+ FASTQ-like format</help>
+		</param>
+		<param name="param-Y" type="boolean" label="Casava-filtered seq" optional="true">
+			<cards min="1" max="1"/>
+			<help>filter Casava-filtered sequences</help>
+		</param>
+	</inputs>	
+
+	<command>
+		bwa aln
+		 {?param-L 
+		  -L {=param-L}}
+		 {?param-M 
+		  -M {=param-M}}
+		 {?param-N 
+		  -N {=param-N}}
+		 {?param-O 
+		  -O {=param-O}}
+		 {?param-R 
+		  -R {=param-R}}
+		 {?param-Y 
+		  -Y {=param-Y}}
+		 {?param-d 
+		  -d {=param-d}}
+		 {?param-e 
+		  -e {=param-e}}
+		 {?param-f 
+		  -f {=param-f}}
+		 {?param-i 
+		  -i {=param-i}}
+		 {?param-k 
+		  -k {=param-k}}
+		 {?param-l 
+		  -l {=param-l}}
+		 {?param-m 
+		  -m {=param-m}}
+		 {?param-n 
+		  -n {=param-n}}
+		 {?param-o 
+		  -o {=param-o}}
+		 {?param-q 
+		  -q {=param-q}}
+		 {?param-B 
+		  -B {=param-B}}
+		 {?param-t 
+		  -t {=param-t}}
+		 {?param-E 
+		  -E {=param-E}}
+		 {?param-I 
+		  -I {=param-I}}
+		  
+		 {=index.prefix}/{=index.name} {=input.fastq}
+	</command>
+	<outputs>
+		<param name="param-f" type="file" label="File to write" optional="false">
+			<cards min="1" max="1"/>
+			<help>file to write output to instead of stdout</help>
+		</param>
+	</outputs>
+</tool>
+
