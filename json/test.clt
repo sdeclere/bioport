@@ -1,0 +1,131 @@
+{
+    "groups" : [ "denovo assembly" , "bwa" ] , 
+ 
+    "args": [
+        [
+            "Input", 
+            "--version", 
+            "Flag", 
+            {
+                "desc": "--version output version information and exit", 
+                "flag": "--version"
+            }
+        ], 
+        [
+            "Input", 
+            "--help", 
+            "Flag", 
+            {
+                "desc": "--help display this help and exit", 
+                "flag": "--help"
+            }
+        ], 
+        [
+            "Input", 
+            "--show-nonprinting", 
+            "Flag", 
+            {
+                "desc": "-v, --show-nonprinting use ^ and M- notation, except for LFD and TAB", 
+                "flag": "--show-nonprinting"
+            }
+        ], 
+        [
+            "Input", 
+            "--show-tabs", 
+            "Flag", 
+            {
+                "desc": "-T, --show-tabs display TAB characters as ^I", 
+                "flag": "--show-tabs"
+            }
+        ], 
+        [
+            "Input", 
+            "-t", 
+            "Flag", 
+            {
+                "desc": "-t     equivalent to -vT", 
+                "flag": "-t"
+            }
+        ], 
+        [
+            "Input", 
+            "--squeeze-blank", 
+            "Flag", 
+            {
+                "desc": "-s, --squeeze-blank suppress repeated empty output lines", 
+                "flag": "--squeeze-blank"
+            }
+        ], 
+        [
+            "Input", 
+            "--number", 
+            "Flag", 
+            {
+                "desc": "-n, --number number all output lines", 
+                "flag": "--number"
+            }
+        ], 
+        [
+            "Input", 
+            "--show-ends", 
+            "Flag", 
+            {
+                "desc": "-E, --show-ends display $ at end of each line", 
+                "flag": "--show-ends"
+            }
+        ], 
+        [
+            "Input", 
+            "-e", 
+            "Flag", 
+            {
+                "desc": "-e     equivalent to -vE", 
+                "flag": "-e"
+            }
+        ], 
+        [
+            "Input", 
+            "--number-nonblank", 
+            "Flag", 
+            {
+                "desc": "-b, --number-nonblank number nonempty output lines, overrides -n", 
+                "flag": "--number-nonblank"
+            }
+        ], 
+        [
+            "Input", 
+            "--show-all", 
+            "Flag", 
+            {
+                "desc": "-A, --show-all equivalent to -vET", 
+                "flag": "--show-all"
+            }
+        ], 
+        [
+            "Input", 
+            "input.file1", 
+            "File", 
+            {
+                "desc": "input1", 
+                "required": ""
+            }
+        ], 
+        [
+            "Input", 
+            "input.file2", 
+            "File", 
+            {
+                "desc": "input2"
+            }
+        ], 
+        [
+            "Output", 
+            "output.file", 
+            "File", 
+            {
+                "desc": "ouput"
+            }
+        ]
+    ], 
+    "command": "cat"
+}
